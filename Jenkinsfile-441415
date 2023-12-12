@@ -1,0 +1,22 @@
+pipeline {
+  agent any
+  stages {
+    stage ('Deploy (cr5j7m)') {
+      steps {
+        sh script: 'helm package chart', label: 'yrl20w'
+        withCredentials([usernamePassword(credentialsId: '', passwordVariable: 'PASS', usernameVariable: 'USER')]) {
+
+        script {
+            sh script: '''
+curl -u$USER:$PASS -T qwerty-frontend2-chart-0.1.0.tgz 'https://artifactory.dagility.com/artifactory/helm-local/qwerty-frontend2-chart-0.1.0.tgz' 
+''', label: 'fdefdc'
+        } // end step group script
+script { sh script: 'sleep 0.005', label: 'icoxs7'}
+} // end step group
+        sh script: 'helm repo add qwerty-frontend2 https://artifactory.dagility.com/artifactory/helm ', label: 'v8rljh'
+        sh script: 'helm repo update', label: 'xkb2da'
+        sh script: 'helm upgrade qwerty-frontend2-deployment qwerty-frontend2/qwerty-frontend2-chart --install --values chart-values.yaml --namespace argocd --set ingress.hosts[0].host=${project.prefix?lower_case}-${component.code}-${project.environment?lower_case}.${project.properties.domain}', label: 'j0myop'
+      } //end steps
+    } // end stage Deploy
+  }
+}
